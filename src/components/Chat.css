@@ -1,0 +1,133 @@
+.chat {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.userList {
+    height: 100%;
+    width: 25%;
+
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border-right: 1px solid #242424e2;
+
+    box-sizing: border-box;
+}
+
+.users {
+    height: 100%;
+    width: 100%;
+
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+.search-bar {
+    width: 100%;
+    border-bottom: 1px solid #242424e2;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.search-bar input {
+
+    width: 260px;
+    height: 30px;
+
+    padding: 5px 10px;
+
+    margin: 10px;
+
+    font-size: medium;
+
+    color: #242424e2;
+    background-color: #f8f4f4;
+    border-radius: 20px;
+
+}
+
+.user {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #242424e2;
+    box-sizing: border-box;
+    text-align: start;
+
+    padding: 5px 0 5px 8px;
+
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.user:hover {
+    background-color: #cbc6c6;
+}
+
+.userInfo {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.name {
+    font-size: large;
+    flex: 1;
+    margin: 0;
+}
+
+.msgTime {
+    font-size: smaller;
+    color: #2424248e;
+    margin: 0 10px 0 0;
+}
+
+.lastMsg {
+    font-size: smaller;
+    color: #2424248e;
+    margin: 15px 0 0 0;
+}
+
+.fillerBox {
+    width: 75%;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-around;
+
+    align-items: center;
+    text-align: center;
+}
+
+.fillerBoxContainer {
+    width: 300px;
+    height: 200px;
+    background-color: #cbc6c6;
+
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+    align-items: center;
+
+    border-radius: 20px;
+}
+
+.error {
+    color: red;
+}

@@ -1,0 +1,161 @@
+.chat-field {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-field__user {
+    height: 8%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 2px 10px;
+
+    border-bottom: 1px solid #242424e2;
+
+    justify-content: space-between;
+}
+
+.chat-field__user--img {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 100%;
+
+    transition: width 0.3s ease, height 0.3s ease;
+
+}
+
+.chat-field__user--img:hover {
+    width: 54px;
+    height: 54px;
+}
+
+.chat-field__messages {
+    height: 85%;
+    width: 100% - 10px;
+    background-color: rgb(232, 232, 232);
+
+    border-bottom: 1px solid #242424e2;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.chat-field__input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+
+    column-gap: 40px;
+
+    padding: 10px 20px;
+}
+
+.chat-field__input {
+
+    width: 80%;
+    height: 35px;
+
+    background-color: white;
+
+    color: #242424e2;
+    font-size: large;
+    font-weight: 600;
+
+    border-radius: 20px;
+
+    padding: 3px 10px;
+}
+
+.chat-field__send-button {
+    height: 43px !important;
+}
+
+.chat-field__date {
+
+    font-size: large;
+
+    padding: 5px;
+    align-self: center;
+}
+
+.chat-field__message {
+    width: auto;
+    height: auto;
+
+    max-width: 400px;
+
+    padding: 12px;
+
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+
+    border-radius: 10px;
+
+    margin: 10px;
+
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+.chat-field__message--user {
+    background-color: #cff0d0;
+    align-self: flex-start;
+}
+
+.chat-field__message--self {
+    background-color: #75d178;
+    align-self: flex-end;
+}
+
+.chat-field__message--time {
+    font-size: xx-small;
+    font-weight: 600;
+
+    padding: 1px;
+
+    margin: 10px 0 0 0; 
+}
+
+.chat-field__emoji-button {
+    width: auto;
+    height: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 10px;
+    transition: 0.3s ease font-size;
+  }
+
+  .chat-field__emoji-button:hover {
+    background: none;
+    font-size: 26px;
+  }
+  
+  .chat-field__emoji-picker {
+    position: absolute;
+    bottom: 60px; 
+    left: 10px;  
+    z-index: 1000;
+  }
+
+.user-time {
+    align-self: flex-end;
+}
+
+.self-time {
+    align-items: flex-start;
+}
+
+
+  
