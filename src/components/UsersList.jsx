@@ -11,28 +11,29 @@ const UsersList = ({ curUser, curId, handleChosenUser, handleChatChange, message
     setSearch(e.target.value);
   };
 
-  // const getUserData = async (userId) => {
-  //   try {
-  //     const response = await fetch("http://localhost/chatBot/api/userMessageData.php", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({curId, userId})
-  //     })
 
-  //     const result = await response.json()
+  const getUserData = async (userId) => {
+    try {
+      const response = await fetch("http://localhost/chatBot/api/userMessageData.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({curId, userId})
+      })
 
-  //     if (result.success === false) {
-  //       console.log("Dont work");
-  //     } else if (Array.isArray(result)) {
-  //       return result[0]
-  //     }
-  //   } catch (error) {
-  //     console.error(error)
-  //     return null
-  //   }
-  // }
+      const result = await response.json()
+
+      if (result.success === false) {
+        console.log("Dont work");
+      } else if (Array.isArray(result)) {
+        return result[0]
+      }
+    } catch (error) {
+      console.error(error)
+      return null
+    }
+  }
 
   const getUsers = async () => {
     try {
@@ -59,7 +60,7 @@ const UsersList = ({ curUser, curId, handleChosenUser, handleChatChange, message
   };
 
   useEffect(() => {
-    getUsers();
+    getUsers()
   }, []);
 
   // useEffect(() => {
@@ -82,6 +83,7 @@ const UsersList = ({ curUser, curId, handleChosenUser, handleChatChange, message
   //   }
 
   // }, [messageFlag])
+  
 
 
   return (
@@ -118,9 +120,9 @@ const UsersList = ({ curUser, curId, handleChosenUser, handleChatChange, message
                   >
                     <div className="userInfo">
                       <h3 className="name">{user}</h3>
-                      <p className="msgTime">{user.time}</p>
+                      <p className="msgTime">12:30</p>
                     </div>
-                    <p className="lastMsg">{user.text}</p>
+                    <p className="lastMsg">hello</p>
                   </div>
                 );
               }
@@ -136,9 +138,9 @@ const UsersList = ({ curUser, curId, handleChosenUser, handleChatChange, message
                 >
                   <div className="userInfo">
                     <h3 className="name">{user}</h3>
-                    <p className="msgTime">{user.time}</p>
+                    <p className="msgTime">{user}</p>
                   </div>
-                  <p className="lastMsg">{user.text}</p>
+                  <p className="lastMsg">{user}</p>
                 </div>
               );
             }
