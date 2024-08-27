@@ -17,11 +17,21 @@ if (!$data) {
     exit();
 }
 
-$input_username = $sql->real_escape_string($data["username"]);
+$input_username = $data["username"];
 
-$sqlRes = "SELECT id FROM users WHERE username='$input_username'"; 
 
-$result = $sql->query($sqlRes);
+$stmt = $sql->prepare("SELECT id FROM users WHERE username=?");
+
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
+
+$stmt->bind_param('s', $input_username);
+$stmt->execute();
+
+$result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
     $username = $result->fetch_assoc();

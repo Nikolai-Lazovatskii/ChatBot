@@ -14,12 +14,22 @@ if (!$data) {
     exit();
 }
 
-$input_username = $sql->real_escape_string($data["username"]);
-$input_password = $sql->real_escape_string($data["password"]);
+$input_username = $data["username"];
+$input_password = $data["password"];
 
-$sqlRes = "SELECT * FROM users WHERE username='$input_username'";
+$stmt = $sql->prepare("SELECT * FROM users WHERE username=?");
 
-$result = $sql->query($sqlRes);
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
+
+$stmt->bind_param('s', $input_username);
+$stmt->execute();
+
+
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
 

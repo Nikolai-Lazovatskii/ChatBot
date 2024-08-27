@@ -13,26 +13,34 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data) {
-    echo json_encode(["success" => false, "message" => "Connection faild!"]);
+    echo json_encode(["success" => false, "message" => "Connection failed!"]);
     exit();
 }
 
-$user_id = $sql->real_escape_string($data["userId"]);
-$cur_id = $sql->real_escape_string($data["curId"]);
+$user_id = $data["userId"];
+$cur_id = $data["curId"];
 
-$sqlRes = "SELECT message_text, timestamp 
-FROM messages 
-WHERE (sender_id = '$user_id' AND getter_id = '$cur_id') 
-OR (sender_id = '$cur_id' AND getter_id = '$user_id')
-ORDER BY timestamp DESC 
-LIMIT 1";
+$stmt = $sql->prepare("SELECT message_text, timestamp 
+                       FROM messages 
+                       WHERE (sender_id = ? AND getter_id = ?) 
+                       OR (sender_id = ? AND getter_id = ?)
+                       ORDER BY timestamp DESC 
+                       LIMIT 1");
 
-$result = $sql->query($sqlRes);
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
+
+$stmt->bind_param('iiii', $user_id, $cur_id, $cur_id, $user_id);
+
+$stmt->execute();
+
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-
     $message = [];
-
     while ($row = $result->fetch_assoc()) {
         $message[] = [
             'text' => $row['message_text'],
@@ -40,12 +48,11 @@ if ($result->num_rows > 0) {
         ];
     }
     echo json_encode($message);
-    exit(); 
 } else {
     echo json_encode(["success" => false, "message" => "No message found"]);
 }
 
+$stmt->close();
 $sql->close();
 exit();
-
 ?>

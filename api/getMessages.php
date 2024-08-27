@@ -17,14 +17,23 @@ if (!$data) {
     exit();
 }
 
-$user1 = $sql->real_escape_string($data["user1"]);
-$user2 = $sql->real_escape_string($data["user2"]);
+$user1 = $data["user1"];
+$user2 = $data["user2"];
 
-$sqlRes = "SELECT message_text, timestamp, sender_id FROM messages
-WHERE (sender_id='$user1' AND getter_id='$user2') OR (sender_id='$user2' AND getter_id='$user1')
-ORDER BY timestamp ASC";
+$stmt = $sql->prepare("SELECT message_text, timestamp, sender_id FROM messages
+                       WHERE (sender_id = ? AND getter_id = ?) OR (sender_id = ? AND getter_id = ?)
+                       ORDER BY timestamp ASC");
 
-$result = $sql->query($sqlRes);
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
+
+$stmt->bind_param('iiii', $user1, $user2, $user2, $user1);
+$stmt->execute();
+
+$result = $stmt->get_result();
 
 if ($result) {
     $messages = [];
@@ -42,10 +51,7 @@ if ($result) {
     echo json_encode(["success" => false, "message" => "No users found"]);
 }
 
-echo json_encode(["success" => false, "message" => "No users found"]);
-
+$stmt->close();
 $sql->close();
-
 exit();
-
 ?>

@@ -23,13 +23,22 @@ if (!$data || !isset($data['username'], $data['email'], $data['password'])) {
     exit();
 }
 
-$input_username = $sql->real_escape_string($data["username"]);
-$input_email = $sql->real_escape_string($data["email"]);
-$input_password = password_hash($sql->real_escape_string($data['password']), PASSWORD_BCRYPT);
+$input_username = $data["username"];
+$input_email = $data["email"];
+$input_password = password_hash($data['password'], PASSWORD_BCRYPT);
 
-$sqlRes = "INSERT INTO users (username, email, password) VALUES ('$input_username', '$input_email', '$input_password')";
+$stmt = $sql->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
 
-if ($sql->query($sqlRes) === FALSE) {
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
+
+$stmt->bind_param('sss', $input_username, $input_email, $input_password);
+$stmt->execute();
+
+if ($sql->query($stmt->get_result()) === FALSE) {
     error_log("SQL Error: " . $sql->error);
     echo json_encode(["success" => false, "message" => "Error: " . $sql->error]);
     exit();

@@ -17,14 +17,22 @@ if (!$data) {
     exit();
 }
 
-$user1 = $sql->real_escape_string($data["user1"]);
-$user2 = $sql->real_escape_string($data["user2"]);
-$message = $sql->real_escape_string($data["message"]);
+$user1 = $data["user1"];
+$user2 = $data["user2"];
+$message = $data["message"];
 
+$stmt = $sql->prepare("INSERT INTO messages (sender_id, getter_id, message_text) VALUES (?, ?, ?)");
 
-$sqlRes = "INSERT INTO messages (sender_id, getter_id, message_text) VALUES ('$user1', '$user2', '$message')";
+if (!$stmt) {
+    error_log("SQL Error: " . $sql->error);
+    echo json_encode(["success" => false, "message" => "Preparation failed: " . $sql->error]);
+    exit();
+}
 
-if ($sql->query($sqlRes) === FALSE) {
+$stmt->bind_param('sss', $user1, $user2, $message);
+$stmt->execute();
+
+if ($sql->query($stmt->get_result()) === FALSE) {
     error_log("SQL Error: " . $sql->error);
     echo json_encode(["success" => false, "message" => "Error: " . $sql->error]);
     exit();
