@@ -30,18 +30,18 @@ if (!$stmt) {
 }
 
 $stmt->bind_param('sss', $user1, $user2, $message);
-$stmt->execute();
+$result = $stmt->execute();
 
-if ($sql->query($stmt->get_result()) === FALSE) {
-    error_log("SQL Error: " . $sql->error);
-    echo json_encode(["success" => false, "message" => "Error: " . $sql->error]);
+if (!$result) {
+    error_log("SQL Error: " . $stmt->error);
+    echo json_encode(["success" => false, "message" => "Error: " . $stmt->error]);
     exit();
 }
 
+$stmt->close();
 $sql->close();
 
-echo json_encode(['success' => true, 'message' => 'Login successful']);
+echo json_encode(['success' => true, 'message' => 'Message inserted successfully']);
 
 exit();
-
 ?>
