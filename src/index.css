@@ -23,9 +23,13 @@ body {
   margin: 0px;
 }
 
-
 a {
   color: #4CAF50;
+  transition: 0.3s ease;
+}
+
+a:hover {
+  color: #2b7b2e;
 }
 
 button {

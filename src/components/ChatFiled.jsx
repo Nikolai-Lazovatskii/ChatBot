@@ -2,6 +2,7 @@ import Picker from "emoji-picker-react";
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import "./ChatField.css";
+import ChatFieldMessages from "./ChatFieldMessages";
 
 const ChatFiled = ({ userInfo, curUser, userChange, curIdHandler, handleMessageFlag }) => {
   const [message, setMessage] = useState("");
@@ -10,15 +11,7 @@ const ChatFiled = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const inputRef = useRef(null)
-  const messageEnd = useRef(null);
 
-  let lastMessage = [];
-
-  useEffect(() => {
-    if (userId !== 0) {
-      curIdHandler(userId)
-    }
-  }, [userId])
 
   useEffect(() => {
     if (userId && userInfo[1]) {
@@ -27,12 +20,15 @@ const ChatFiled = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
   }, [userId, userInfo, userChange]);
 
   useEffect(() => {
+    if (userId !== 0) {
+      curIdHandler(userId)
+    }
+  }, [userId])
+
+  useEffect(() => {
     getUserId();
   }, [curUser]);
 
-  useEffect(() => {
-    moveBottom();
-  }, [messages]);
 
   const handleMessage = (e) => {
     setMessage(e.target.value);
@@ -137,22 +133,7 @@ const ChatFiled = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
       console.error(error);
     }
   };
-
-  const moveBottom = () => {
-    if (messageEnd.current) {
-      messageEnd.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const formatDate = (dateStr) => {
-    const now = new Date();
-    const today = now.toISOString().split("T")[0];
-
-    return dateStr === today ? "Today" : dateStr;
-  };
-
-  let currentDate = "";
-
+   
   return (
     <div className="chat-field">
       <div className="chat-field__user">
@@ -163,67 +144,7 @@ const ChatFiled = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
           className="chat-field__user--img"
         />
       </div>
-      <div className="chat-field__messages">
-        {messages.map((messageText, key) => {
-          if (key === messageText.length - 1) {
-            lastMessage.push(messageText.text);
-            lastMessage.push(messageText.time);
-          }
-          let date = "";
-          let flag = false;
-          const messageDate = formatDate(messageText.time.slice(0, 10));
-
-          if (currentDate !== messageDate) {
-            flag = true;
-            currentDate = messageDate;
-          }
-
-          // if (messageDate != currentDate) {
-          //   const dateFormated = formatDate(messageDate);
-          //   currentDate = messageDate;
-          //   <div className="chat-field__date">{currentDate}</div>;
-          // }
-
-          date += messageText.time.slice(10, 16);
-
-          if (messageText.id == userId) {
-            return (
-              <React.Fragment key={key}>
-                {flag ? (
-                  <div className="chat-field__date">{messageDate}</div>
-                ) : (
-                  ""
-                )}
-                <div
-                  key={key}
-                  className="chat-field__message chat-field__message--self"
-                >
-                  {messageText.message}{" "}
-                  <p className="chat-field__message--time self-time">{date}</p>
-                </div>
-              </React.Fragment>
-            );
-          } else {
-            return (
-              <React.Fragment key={key}>
-                {flag ? (
-                  <div className="chat-field__date">{messageDate}</div>
-                ) : (
-                  ""
-                )}
-                <div
-                  key={key}
-                  className="chat-field__message chat-field__message--user"
-                >
-                  {messageText.message}{" "}
-                  <p className="chat-field__message--time user-time">{date}</p>
-                </div>
-              </React.Fragment>
-            );
-          }
-        })}
-        <div ref={messageEnd} />
-      </div>
+      <ChatFieldMessages messages={messages} userId={userId} />
       <div className="chat-field__input-container">
         <button
           onClick={toggleEmojiPicker}
