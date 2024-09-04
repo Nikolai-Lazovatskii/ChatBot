@@ -117,6 +117,10 @@
     align-self: flex-end;
 }
 
+.chat-field__message--emoji {
+    font-size: 36px !important;
+  }  
+
 .chat-field__message--time {
     font-size: xx-small;
     font-weight: 600;
@@ -156,6 +160,3 @@
 .self-time {
     align-items: flex-start;
 }
-
-
-  

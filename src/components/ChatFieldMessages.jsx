@@ -1,94 +1,69 @@
-import React from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 const ChatFieldMessages = ({ messages, userId }) => {
-
-  const messageEnd = useRef(null);
-
-  let lastMessage = [];
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
-    moveBottom();
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
-
 
   const formatDate = (dateStr) => {
     const now = new Date();
     const today = now.toISOString().split("T")[0];
-
     return dateStr === today ? "Today" : dateStr;
   };
 
-  let currentDate = "";
+  let lastDisplayedDate = "";
 
-  const moveBottom = () => {
-    if (messageEnd.current) {
-      messageEnd.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // const isEmoji = (message) => {
+  //   const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu;
+  //   return emojiRegex.test(message);
+  // };
 
   return (
     <div className="chat-field__messages">
-      {messages.map((messageText, key) => {
-        if (key === messageText.length - 1) {
-          lastMessage.push(messageText.text);
-          lastMessage.push(messageText.time);
-        }
-        let date = "";
-        let flag = false;
-        const messageDate = formatDate(messageText.time.slice(0, 10));
+      {messages.map((message, index) => {
+        const messageDate = formatDate(message.time.slice(0, 10));
+        const displayTime = message.time.slice(11, 16);
+        const isUserMessage = message.id === userId;
+        const shouldDisplayDate = lastDisplayedDate !== messageDate;
 
-        if (currentDate !== messageDate) {
-          flag = true;
-          currentDate = messageDate;
+        if (shouldDisplayDate) {
+          lastDisplayedDate = messageDate;
         }
 
-        // if (messageDate != currentDate) {
-        //   const dateFormated = formatDate(messageDate);
-        //   currentDate = messageDate;
-        //   <div className="chat-field__date">{currentDate}</div>;
-        // }
+        return (
+          <React.Fragment key={index}>
+            {shouldDisplayDate && (
+              <div className="chat-field__date">{messageDate}</div>
+            )}
 
-        date += messageText.time.slice(10, 16);
-
-        if (messageText.id == userId) {
-          return (
-            <React.Fragment key={key}>
-              {flag ? (
-                <div className="chat-field__date">{messageDate}</div>
-              ) : (
-                ""
-              )}
-              <div
-                key={key}
-                className="chat-field__message chat-field__message--self"
+            <div
+              className={`chat-field__message ${
+                isUserMessage
+                  ? "chat-field__message--self"
+                  : "chat-field__message--user" 
+                  // &&  message.message.length === 1 &&
+                  //   isEmoji(message.message)
+                  // ? "chat-field__message--emoji"
+                  // : ""
+              }`}
+            >
+              {message.message}
+              <p
+                className={`chat-field__message--time ${
+                  isUserMessage ? "self-time" : "user-time"
+                }`}
               >
-                {messageText.message}{" "}
-                <p className="chat-field__message--time self-time">{date}</p>
-              </div>
-            </React.Fragment>
-          );
-        } else {
-          return (
-            <React.Fragment key={key}>
-              {flag ? (
-                <div className="chat-field__date">{messageDate}</div>
-              ) : (
-                ""
-              )}
-              <div
-                key={key}
-                className="chat-field__message chat-field__message--user"
-              >
-                {messageText.message}{" "}
-                <p className="chat-field__message--time user-time">{date}</p>
-              </div>
-            </React.Fragment>
-          );
-        }
+                {displayTime}
+              </p>
+            </div>
+          </React.Fragment>
+        );
       })}
-      <div ref={messageEnd} />
+      <div ref={messageEndRef} />
     </div>
   );
 };
