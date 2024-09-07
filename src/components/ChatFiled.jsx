@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ChatField.css";
 import ChatFieldMessages from "./ChatFieldMessages";
 
-
 /**
  * ChatField Component
  *
@@ -39,8 +38,13 @@ import ChatFieldMessages from "./ChatFieldMessages";
  * - ChatFieldMessages: Displays the list of messages.
  */
 
-
-const ChatField = ({ userInfo, curUser, userChange, curIdHandler, handleMessageFlag }) => {
+const ChatField = ({
+  userInfo,
+  curUser,
+  userChange,
+  curIdHandler,
+  handleMessageFlag,
+}) => {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState(0);
   const [messages, setMessages] = useState([]);
@@ -100,29 +104,31 @@ const ChatField = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
   };
 
   const addMessage = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost/chatBot/api/addMessages.php",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user1: userId,
-            user2: userInfo[1],
-            message: message.trim(),
-          }),
+    if (message.trim().length > 0) {
+      try {
+        const response = await fetch(
+          "http://localhost/chatBot/api/addMessages.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user1: userId,
+              user2: userInfo[1],
+              message: message.trim(),
+            }),
+          }
+        );
+        const result = await response.json();
+        if (result.success) {
+          setMessage("");
+          handleMessageFlag();
+          getMessages();
+        } else {
+          console.error(result.message);
         }
-      );
-      const result = await response.json();
-      if (result.success) {
-        setMessage("");
-        handleMessageFlag();
-        getMessages();
-      } else {
-        console.error(result.message);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -151,11 +157,18 @@ const ChatField = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
     <div className="chat-field">
       <div className="chat-field__user">
         <h2 className="chat-field__user--name">{userInfo[0]}</h2>
-        <img src="/userImg.jpg" alt="profileImg" className="chat-field__user--img" />
+        <img
+          src="/userImg.jpg"
+          alt="profileImg"
+          className="chat-field__user--img"
+        />
       </div>
       <ChatFieldMessages messages={messages} userId={userId} />
       <div className="chat-field__input-container">
-        <button onClick={toggleEmojiPicker} className="chat-field__emoji-button">
+        <button
+          onClick={toggleEmojiPicker}
+          className="chat-field__emoji-button"
+        >
           😊
         </button>
         {showEmojiPicker && (
@@ -172,9 +185,12 @@ const ChatField = ({ userInfo, curUser, userChange, curIdHandler, handleMessageF
           onChange={handleMessage}
           ref={inputRef}
         />
-        <button className="chat-field__send-button" onClick={addMessage}>
-          Send
-        </button>
+        <img
+          className="chat-field__send-button"
+          onClick={addMessage}
+          src="./sendMessage.svg"
+          alt="send"
+        />
       </div>
     </div>
   );
