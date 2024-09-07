@@ -1,5 +1,29 @@
 import React, { useEffect, useRef } from "react";
 
+
+/**
+ * ChatFieldMessages Component
+ *
+ * Renders a list of chat messages, displaying each with its timestamp and ensuring the 
+ * most recent message is always visible by scrolling the view. It handles formatting 
+ * the message date and displaying it only when it changes between messages.
+ *
+ * Props:
+ * - messages (array): Array of message objects, each containing `id`, `message`, and `time`.
+ * - userId (string): The ID of the current user, used to differentiate their messages.
+ *
+ * Hooks:
+ * - useEffect: Scrolls to the last message when the `messages` array updates.
+ *
+ * Methods:
+ * - formatDate: Formats the message date as "Today" if it matches the current date.
+ *
+ * Key Features:
+ * - Automatic scrolling to the newest message.
+ * - Displays date separators between messages from different days.
+ */
+
+
 const ChatFieldMessages = ({ messages, userId }) => {
   const messageEndRef = useRef(null);
 

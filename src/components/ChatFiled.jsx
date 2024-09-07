@@ -3,6 +3,43 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ChatField.css";
 import ChatFieldMessages from "./ChatFieldMessages";
 
+
+/**
+ * ChatField Component
+ *
+ * This component represents the chat interface. It includes a header with the selected user's name,
+ * a message display area, an input for typing messages, and an emoji picker.
+ *
+ * Props:
+ * - userInfo (array): Information about the currently selected user (name, id).
+ * - curUser (string): The username of the currently logged-in user.
+ * - userChange (boolean): A flag indicating if the user in the chat has changed.
+ * - curIdHandler (function): A function to handle setting the current user ID.
+ * - handleMessageFlag (function): A function to toggle the message flag, indicating new messages.
+ *
+ * State:
+ * - message (string): Stores the message currently being typed.
+ * - userId (number): Stores the current user's ID.
+ * - messages (array): List of messages between the current user and the selected user.
+ * - showEmojiPicker (boolean): Controls the visibility of the emoji picker.
+ *
+ * Hooks:
+ * - useEffect: Used to fetch user ID and messages when needed.
+ *
+ * Methods:
+ * - handleMessage: Updates the state when the user types a message.
+ * - handleEnter: Sends the message when the "Enter" key is pressed.
+ * - toggleEmojiPicker: Shows or hides the emoji picker.
+ * - onEmojiClick: Adds an emoji to the message.
+ * - getUserId: Fetches the current user ID from the API.
+ * - addMessage: Sends the new message to the API and updates the message list.
+ * - getMessages: Fetches messages between the current user and the selected user.
+ *
+ * Child Components:
+ * - ChatFieldMessages: Displays the list of messages.
+ */
+
+
 const ChatField = ({ userInfo, curUser, userChange, curIdHandler, handleMessageFlag }) => {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState(0);
